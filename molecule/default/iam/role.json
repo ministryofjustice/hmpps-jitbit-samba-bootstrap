@@ -16,14 +16,6 @@
         },
         {
             "Effect": "Allow",
-            "Sid": "SsmParamStoreDescribe",
-            "Action": "ssm:DescribeParameters",
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Effect": "Allow",
             "Sid": "SsmParamStorePerms",
             "Action": "*",
             "Resource": [
