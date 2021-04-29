@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo -ne "{{ samba_password }}\n{{ samba_password }}\n" | smbpasswd -a -s {{ samba_user }} > /var/log/samba-pass.log
+smbpasswd -e {{ samba_user }} >> /var/log/samba-pass.log

@@ -1,0 +1,38 @@
+---
+# defaults file for hmpps-ansible-samba-role
+
+samba_user: samba
+samba_group: sambashare
+samba_gid: 2000
+samba_uid: 2000
+samba_ssm_user: "/test/user"
+samba_ssm_password: "/test/password"
+samba_security: user
+samba_pass_sh_script: "/root/samba-pass.sh"
+samba_conf_file: "/etc/samba/smb.conf"
+samba_work_group: WORKGROUP
+samba_netbios_name: test
+samba_passdb_backend: tdbsam
+samba_log_file: /var/log/samba/log.smbd
+samba_max_log_size: 10000
+samba_share: /opt/test
+nfs_host: localhost
+data_dir: "data"
+
+# EFS Hack
+disk_free_value: "8000000000 8000000000"
+disk_free_destination: "/etc/samba/samba-dfree"
+disk_free_cache_time: 60
+
+# Logs
+extra_logs: {}
+stream_name: "{instance_id}"
+aws_region: eu-west-2
+awslogs_loglevel: ""
+
+log_group: cr-jitbit-dev
+
+logs:
+  - file: /var/log/messages
+    group_name: "{{ log_group }}"
+    stream_name: messages

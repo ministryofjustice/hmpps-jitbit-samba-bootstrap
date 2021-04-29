@@ -1,0 +1,26 @@
+
+[global]
+        workgroup = {{ samba_work_group }}
+        netbios name = {{ samba_netbios_name }}
+        security = {{ samba_security }}
+        passdb backend = {{ samba_passdb_backend }}
+        printing = cups
+        printcap name = cups
+        load printers = yes
+        cups options = raw
+        dfree command = {{ disk_free_destination}}
+        dfree cache time = {{ disk_free_cache_time }}
+        log file = {{ samba_log_file }}
+        log level = 1
+        max log size = {{ samba_max_log_size }}
+        force create mode = 0770
+        force user = {{ samba_user }}
+        force group = {{ samba_user }}
+
+[Secure]
+        comment = {{ data_dir }} file share
+        path = {{ samba_share }}/{{ data_dir }}
+        valid users = @{{ samba_group }}
+        guest ok = no
+        writable = yes
+        browsable = yes

@@ -1,0 +1,84 @@
+---
+- name: set efs fact
+  set_fact:
+    nfs_endpoint: "{{ current_az }}.{{ nfs_host }}"
+
+- name: start samba
+  service:
+    name: "{{ samba_daemon }}"
+    state: started
+
+- name: set samba facts
+  set_fact:
+    samba_user: "{{ lookup('aws_ssm', samba_ssm_user) }}"
+    samba_password: "{{ lookup('aws_ssm', samba_ssm_password) }}"
+
+- name: Create samba group
+  group:
+    name: "{{ samba_group }}"
+    gid: "{{ samba_gid }}"
+    state: present
+
+- name: Create samba user
+  user:
+    name: "{{ samba_user }}"
+    uid: "{{ samba_gid }}"
+    group: "{{ samba_group }}"
+
+- name: create samba directory
+  file:
+    path: "{{ samba_share }}"
+    group: "{{ samba_group }}"
+    owner: "{{ samba_user }}"
+    state: directory
+    mode: 0755
+
+- name: Mount nfs volume
+  ansible.posix.mount:
+    src: "{{ nfs_endpoint }}:/"
+    path: "{{ samba_share }}"
+    opts: rw,sync,hard,intr
+    state: mounted
+    fstype: nfs
+
+- name: create data directory
+  file:
+    path: "{{ samba_share }}/{{ data_dir }}"
+    group: "{{ samba_group }}"
+    owner: "{{ samba_user }}"
+    state: directory
+    mode: 0755
+
+- name: Create samba pass script
+  template:
+    src: samba-pass.sh.j2
+    dest: "{{ samba_pass_sh_script }}"
+    mode: u+x
+
+- name: Set samba user pass
+  command: "{{ samba_pass_sh_script }}"
+  args:
+    creates: "/var/log/samba-pass.log"
+
+- name: Create our disk free script
+  template:
+    src: samba_disk_free.j2
+    dest: "{{ disk_free_destination }}"
+    owner: "root"
+    mode: "0755"
+    group: "root"
+
+- name: remove samba pass script
+  file:
+    state: absent
+    path: "{{ samba_pass_sh_script }}"
+
+- name: Create samba config file
+  template:
+    src: samba.conf.j2
+    dest: "{{ samba_conf_file }}"
+    owner: "root"
+    mode: "0644"
+    group: "root"
+  notify:
+    - restart samba

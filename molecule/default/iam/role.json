@@ -1,0 +1,58 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "allowLoggingToCloudWatch",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "SsmParamStoreDescribe",
+            "Action": "ssm:DescribeParameters",
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "SsmParamStorePerms",
+            "Action": "*",
+            "Resource": [
+                "arn:aws:ssm:*:*:parameter/cr-ancillary/jitbit/samba/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "EC2Perms",
+            "Action": [
+                "ec2:DescribeInstances"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "EC2VolumePerms",
+            "Action": [
+                "ec2:DetachVolume",
+                "ec2:CreateVolume",
+                "ec2:AttachVolume",
+                "ec2:DescribeVolumeAttribute",
+                "ec2:DescribeVolumeStatus",
+                "sts:DecodeAuthorizationMessage",
+                "ec2:DescribeVolumes"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}

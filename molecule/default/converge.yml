@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars_files:
+    - ../vars/role.yml
+  # roles:
+  #   - hmpps-ansible-samba-role
+  tasks:
+    - name: "Include hmpps-jitbit-samba-bootstrap"
+      include_role:
+        name: "hmpps-jitbit-samba-bootstrap"

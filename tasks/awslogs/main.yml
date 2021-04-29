@@ -1,0 +1,25 @@
+---
+- name: "Install CloudWatch Log Agent (Amazon)"
+  yum:
+    name: awslogs
+    state: present
+  register: yum_result
+  ignore_errors: true
+
+- name: install from s3
+  include: install.yml
+  when: "yum_result.failed == true"
+
+- name: "Set region for Cloudwatch endpoint"
+  template:
+    src: templates/etc/aws.conf.j2
+    dest: /var/awslogs/etc/aws.conf
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Restart awslogs service."
+  service:
+    name: awslogs
+    state: restarted
+    enabled: yes

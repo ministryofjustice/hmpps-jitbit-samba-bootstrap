@@ -1,0 +1,34 @@
+---
+aws_region: eu-west-2
+device_name: /dev/xvdb
+volume_name: hmpps-jitbit-samba-bootstrap
+volume_fs_type: xfs
+samba_share: /opt/jitbit
+samba_ssm_user: "/cr-ancillary/jitbit/samba/share/jitbit/user"
+samba_ssm_password: "/cr-ancillary/jitbit/samba/share/jitbit/password"
+nfs_host: fs-0a8f68fa.efs.eu-west-2.amazonaws.com
+data_dir: "data"
+samba_gid: 2000
+samba_uid: 2000
+samba_netbios_name: jitbit
+log_group: cr-jitbit-dev
+
+logs:
+  - file: /var/log/messages
+    group_name: "{{ log_group }}"
+    stream_name: messages
+    format: "%b %d %H:%M:%S"
+  - file: /var/log/audit/audit.log
+    group_name: "{{ log_group }}"
+    stream_name: audit
+    format: "%b %d %H:%M:%S"
+  - file: /var/log/secure
+    group_name: "{{ log_group }}"
+    stream_name: secure
+    format: "%b %d %H:%M:%S"
+  - file: /var/log/samba/log.smbd
+    group_name: "{{ log_group }}"
+    stream_name: log_smbd
+    format: "%b %d %H:%M:%S"
+
+awslogs_loglevel: info

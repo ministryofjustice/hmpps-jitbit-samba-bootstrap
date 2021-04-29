@@ -1,0 +1,17 @@
+---
+- name: get ec2 facts
+  ec2_metadata_facts:
+
+- name: set aws facts
+  set_fact:
+    current_az: "{{ ansible_ec2_placement_availability_zone  }}"
+    instance_id: "{{ ansible_ec2_instance_id }}"
+
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+# - name: configure samba
+#   include: samba.yml
+
+- name: configure awslogs
+  include: awslogs/main.yml
