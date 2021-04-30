@@ -10,8 +10,8 @@
 
 - name: set samba facts
   set_fact:
-    samba_user: "{{ lookup('aws_ssm', samba_ssm_user) }}"
-    samba_password: "{{ lookup('aws_ssm', samba_ssm_password) }}"
+    samba_user: "{{ lookup('aws_ssm', samba_ssm_user, region=aws_region) }}"
+    samba_password: "{{ lookup('aws_ssm', samba_ssm_password, region=aws_region) }}"
 
 - name: Create samba group
   group:
@@ -34,7 +34,7 @@
     mode: 0755
 
 - name: Mount nfs volume
-  ansible.posix.mount:
+  mount:
     src: "{{ nfs_endpoint }}:/"
     path: "{{ samba_share }}"
     opts: rw,sync,hard,intr

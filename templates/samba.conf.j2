@@ -17,7 +17,7 @@
         force user = {{ samba_user }}
         force group = {{ samba_user }}
 
-[Secure]
+[{{ data_dir }}]
         comment = {{ data_dir }} file share
         path = {{ samba_share }}/{{ data_dir }}
         valid users = @{{ samba_group }}
